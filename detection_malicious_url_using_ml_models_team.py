@@ -39,9 +39,9 @@ def getAnswer(url):
 
     count = data.type.value_counts()
 
-    #sns.barplot(x=count.index, y=count)
-    #plt.xlabel('Types')
-    #plt.ylabel('Count')
+    sns.barplot(x=count.index, y=count)
+    plt.xlabel('Types')
+    plt.ylabel('Count')
 
     data['url'] = data['url'].replace('www.', '', regex=True)
     data
@@ -85,7 +85,7 @@ def getAnswer(url):
 
     data['abnormal_url'] = data['url'].apply(lambda i: abnormal_url(i))
 
-    #sns.countplot(x='abnormal_url', data=data);
+    sns.countplot(x='abnormal_url', data=data);
 
     def httpSecure(url):    
         htp = urlparse(url).scheme
@@ -99,7 +99,7 @@ def getAnswer(url):
 
     data['https'] = data['url'].apply(lambda i: httpSecure(i))
 
-    #sns.countplot(x='https', data=data);
+    sns.countplot(x='https', data=data);
 
     def digit_count(url):   
         digits = 0
@@ -136,7 +136,7 @@ def getAnswer(url):
 
     data['Shortining_Service'] = data['url'].apply(lambda x: Shortining_Service(x))
 
-    #sns.countplot(x='Shortining_Service', data=data);
+    sns.countplot(x='Shortining_Service', data=data);
 
     def having_ip_address(url):
         match = re.search(
@@ -157,8 +157,8 @@ def getAnswer(url):
 
     data['having_ip_address'].value_counts()
 
-    #plt.figure(figsize=(15, 15))
-    #sns.heatmap(data.corr(), linewidths=.5)
+    plt.figure(figsize=(15, 15))
+    sns.heatmap(data.corr(), linewidths=.5)
 
     X = data.drop(['url','type','Category','domain'],axis=1)#,'type_code'
     y = data['Category']
@@ -173,22 +173,20 @@ def getAnswer(url):
 
     print("type = ",type(X_test))
     acc = accuracy_score(predi, y_test)  
-    #print("ytest = " , X_test)
-    #print("prediction  = " , predi)
-    #print("accuracy  = " , acc)
+    print("ytest = " , X_test)
+    print("prediction  = " , predi)
+    print("accuracy  = " , acc)
 
     return predi[-1]
 
 app =  gr.Interface(fn = getAnswer , inputs="text", outputs="number")
 app.launch(share = True)
 
-
-"""
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import plot_roc_curve
 
 
-models = [DecisionTreeClassifier] #,RandomForestClassifier,AdaBoostClassifier,SGDClassifier,ExtraTreesClassifier,GaussianNB]
+models = [DecisionTreeClassifier,RandomForestClassifier,AdaBoostClassifier,SGDClassifier,ExtraTreesClassifier,GaussianNB]
 accuracy_test=[]
 
 for m in models:
@@ -204,11 +202,11 @@ for m in models:
     print('Test Accuracy :\033[32m \033[01m {:.2f}% \033[30m \033[0m'.format(acc*100))
     print('\033[01m              Classification_report \033[0m')
     print(classification_report(y_test, pred))
-    #print('\033[01m             Confusion_matrix \033[0m')
-    #cf_matrix = confusion_matrix(y_test, pred)
-    #plot_ = sns.heatmap(cf_matrix/np.sum(cf_matrix), annot=True,fmt= '0.2%')
-    #plt.show()
-    #print('\033[31m###################- End -###################\033[0m')
+    print('\033[01m             Confusion_matrix \033[0m')
+    cf_matrix = confusion_matrix(y_test, pred)
+    plot_ = sns.heatmap(cf_matrix/np.sum(cf_matrix), annot=True,fmt= '0.2%')
+    plt.show()
+    print('\033[31m###################- End -###################\033[0m')
 
 output = pd.DataFrame({"Model":['Decision Tree Classifier'],"Accuracy":accuracy_test})
 print(output)
@@ -235,4 +233,4 @@ plt.xticks(rotation=20)
 plt.ylabel("Accuracy", size=14)
 plt.show()
 
-"""
+
